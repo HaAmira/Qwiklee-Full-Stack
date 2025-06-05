@@ -2,155 +2,155 @@ export const baseURL = import.meta.env.VITE_API_URL
 
 const SummaryApi = {
     register: {
-        url : '/user/register',
+        url : '/api/user/register',
         method : 'post'
     },
     login: {
-        url : '/user/login',
+        url : '/api/user/login',
         method : 'post'
     },
     forgot_password: {
-        url : '/user/forgot-password',
+        url : '/api/user/forgot-password',
         method : 'put'
     },
     forgot_password_otp_verification: {
-        url : '/user/verify-forgot-password-otp',
+        url : '/api/user/verify-forgot-password-otp',
         method : 'put'
     },
     reset_password: {
-        url : '/user/reset-password',
+        url : '/api/user/reset-password',
         method : 'put'
     },
     refreshToken: {
-        url : '/user/refresh-token',
+        url : '/api/user/refresh-token',
         method : 'post'
     },
     userDetails: {
-        url : '/user/user-details',
+        url : '/api/user/user-details',
         method : 'get'
     },
     logout: {
-        url : '/user/logout',
+        url : '/api/user/logout',
         method : 'get'
     },
     uploadAvatar: {
-        url : '/user/upload-avater',
+        url : '/api/user/upload-avater',
         method : 'put'
     },
     updateUserDetails : {
-        url : '/user/update-data',
+        url : '/api/user/update-data',
         method : 'put'
     },
     addCategory: {
-        url : '/category/add-category',
+        url : '/api/category/add-category',
         method : 'post'
     },
     uploadImage: {
-        url : '/file/upload',
+        url : '/api/file/upload',
         method : 'post'
     },
     getCategory: {
-        url : '/category/get',
+        url : '/api/category/get',
         method : 'get'
     },
     updateCategory: {
-        url : '/category/update',
+        url : '/api/category/update',
         method : 'put'
     },
     deleteCategory: {
-        url : '/category/delete',
+        url : '/api/category/delete',
         method : 'delete'
     },
     createSubCategory : {
-        url : '/subcategory/create',
+        url : '/api/subcategory/create',
         method : 'post'
     },
     getSubCategory : {
-        url : '/subcategory/get',
+        url : '/api/subcategory/get',
         method : 'get'
     },
     updateSubCategory: {
-        url : '/subcategory/update',
+        url : '/api/subcategory/update',
         method : 'put'
     },
     deleteSubCategory: {
-        url : '/subcategory/delete',
+        url : '/api/subcategory/delete',
         method : 'delete'
     },
     createProduct : {
-        url : '/product/create',
+        url : '/api/product/create',
         method : 'post'
     },
     getProduct : {
-        url : '/product/get',
+        url : '/api/product/get',
         method : 'post'
     },
     getProductByCategory: {
-        url : '/product/get-product-by-category',
+        url : '/api/product/get-product-by-category',
         method : 'post'
     },
     getProductByCategoryAndSubCategory : {
-        url : '/product/get-product-by-category-and-subcategory',
+        url : '/api/product/get-product-by-category-and-subcategory',
         method : 'post'
     },
     getProductDetails : {
-        url : '/product/get-product-details',
+        url : '/api/product/get-product-details',
         method : 'post'
     },
     updateProductDetails : {
-        url : "/product/update-product-details",
+        url : "/api/product/update-product-details",
         method : 'put'
     },
     deleteProduct : {
-        url : "/product/delete-product",
+        url : "/api/product/delete-product",
         method : 'delete'
     },
     searchProduct : {
-        url : '/product/search-product',
+        url : '/api/product/search-product',
         method : 'post'
     },
     addTocart : {
-        url : "/cart/create",
+        url : "/api/cart/create",
         method : 'post'
     },
     getCartItem : {
-        url : '/cart/get',
+        url : '/api/cart/get',
         method : 'get'
     },
     updateCartItemQty : {
-        url : '/cart/update-qty',
+        url : '/api/cart/update-qty',
         method : 'put'
     },
     deleteCartItem : {
-        url : '/cart/delete-cart-item',
+        url : '/api/cart/delete-cart-item',
         method : 'delete'
     },
     createAddress : {
-        url : '/address/create',
+        url : '/api/address/create',
         method : 'post'
     },
     getAddress : {
-        url : '/address/get',
+        url : '/api/address/get',
         method : 'get'
     },
     updateAddress : {
-        url : '/address/update',
+        url : '/api/address/update',
         method : 'put'
     },
     disableAddress : {
-        url : '/address/disable',
+        url : '/api/address/disable',
         method : 'delete'
     },
     CashOnDeliveryOrder : {
-        url : "/order/cash-on-delivery",
+        url : "/api/order/cash-on-delivery",
         method : 'post'
     },
     payment_url : {
-        url : "/order/checkout",
+        url : "/api/order/checkout",
         method : 'post'
     },
     getOrderItems : {
-        url : '/order/order-list',
+        url : '/api/order/order-list',
         method : 'get'
     }
 }
