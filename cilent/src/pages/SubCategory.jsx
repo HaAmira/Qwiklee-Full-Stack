@@ -12,7 +12,6 @@ import { HiPencil } from "react-icons/hi";
 import EditSubCategory from '../component/EditSubCategory'
 import CofirmBox from '../component/CofirmBox'
 import toast from 'react-hot-toast'
-import SubCategoryModel from '../../../server/models/subCategory_model'
 
 const SubCategoryPage = () => {
   const [openAddSubCategory,setOpenAddSubCategory] = useState(false)
