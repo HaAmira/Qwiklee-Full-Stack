@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import logo from '../assets/Qwiklee.png'
-import Search from './search'
+import Search from './Search'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useMobile } from '../hooks/useMobile'
 import { FaRegCircleUser } from 'react-icons/fa6'
