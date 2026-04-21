@@ -39,7 +39,7 @@ const Home = () => {
             {
               allCategory.map((category,index)=>{
                     return(
-                        <div key={index+"&"+category} onClick={()=>handelRedirectProductListPage(category._id,category.name)}>
+                        <div className=' cursor-pointer' key={index+"&"+category} onClick={()=>handelRedirectProductListPage(category._id,category.name)}>
                             <img
                                 alt={category.name}
                                 src={category.image}

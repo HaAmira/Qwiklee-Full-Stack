@@ -44,7 +44,7 @@ const GlobalProvider = ({children}) => {
             ...SummaryApi.updateCartItemQty,
             data : {
               _id : id,
-              qty : qty
+              qty : qty,
             }
           })
           const { data : responseData } = response
