@@ -60,6 +60,7 @@ const AddToCartButton = ({ data }) => {
     const increaseQty = async(e) => {
         e.preventDefault() 
         e.stopPropagation()
+        // const currentQty = qty + 1;
     
        const response = await  updateCartItem(cartItemDetails?._id,qty+1)
         
@@ -74,7 +75,7 @@ const AddToCartButton = ({ data }) => {
         if(qty === 1){
             deleteCartItem(cartItemDetails?._id)
         }else{
-            const response = await updateCartItem(cartItemDetails?._id,qty-1)
+            const response = await updateCartItem(cartItemDetails?._id,qty-1);
 
             if(response.success){
                 toast.success("Item remove")
