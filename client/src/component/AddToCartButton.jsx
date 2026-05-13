@@ -21,6 +21,7 @@ const AddToCartButton = ({ data }) => {
 
     const isUpdatingRef = useRef(false);
     const updateTimerRef = useRef(null);
+    console.log("data:- ", data);
 
     const handleADDTocart = async (e) => {
         e.preventDefault()
@@ -90,6 +91,10 @@ const AddToCartButton = ({ data }) => {
         e.preventDefault()
         e.stopPropagation()
 
+        if (qtyRef.current >= data?.stock) {
+            return
+        }
+
         const newQty = qtyRef.current + 1;
         changeQuantity(newQty);
     }
@@ -119,16 +124,22 @@ const AddToCartButton = ({ data }) => {
             {
                 isAvailableCart ? (
                     <div className='flex w-full h-full'>
-                        <button onClick={decreaseQty} className='bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center'><FaMinus /></button>
+                        <button onClick={decreaseQty} className='bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center' ><FaMinus /></button>
 
                         <p className='flex-1 w-full font-semibold px-1 flex items-center justify-center'>{qty}</p>
 
-                        <button onClick={increaseQty} className='bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center'><FaPlus /></button>
+                        <button onClick={increaseQty} className={`${qty >= data?.stock ? "opacity-50" : "opacity-100"} bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center`} disabled={qty >= data?.stock}><FaPlus /></button>
                     </div>
                 ) : (
-                    <button onClick={handleADDTocart} className='bg-green-600 hover:bg-green-700 text-white px-2 lg:px-4 py-1 rounded'>
-                        {loading ? <AiOutlineLoading3Quarters className='animate-spin' /> : "Add"}
-                    </button>
+                    data?.stock === 0 ? (
+                        <button className='bg-red-600 text-white px-2 lg:px-4 py-1 rounded w-full' disabled>
+                            Out of Stock
+                        </button>
+                    ) : (
+                        <button onClick={handleADDTocart} className='bg-green-600 hover:bg-green-700 text-white px-2 lg:px-4 py-1 rounded w-full'>
+                            {loading ? <AiOutlineLoading3Quarters className='animate-spin' /> : "Add"}
+                        </button>
+                    )
                 )
             }
 

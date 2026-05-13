@@ -149,7 +149,9 @@ export const updateCartItemQtyController = async (request, response) => {
             message: "Update cart",
             success: true,
             error: false,
-            data: updateCartitem
+            data: updateCartitem,
+            productStock: checkCartItem.productId.stock,
+            quantity: updateCartitem.quantity
         })
 
     } catch (error) {
