@@ -22,12 +22,12 @@ app.use(cors({
 }))
 app.use(express.json())
 app.use(cookieParser())
-app.use(morgan())
+app.use(morgan("dev"))
 app.use(helmet({
     crossOriginResourcePolicy : false
 }))
 
-const PORT = 8000 || process.env.PORT
+const PORT = process.env.PORT || 8000
 app.get("/",(request,response)=>{
     response.json({
         message : "server is running"+PORT

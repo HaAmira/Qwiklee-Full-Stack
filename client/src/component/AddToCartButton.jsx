@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useGlobalContext } from '../provider/GlobalProvider'
 import Axios from '../utils/Axios'
 import SummaryApi from '../common/SummaryApi'
@@ -15,13 +15,16 @@ const AddToCartButton = ({ data }) => {
     const [isAvailableCart, setIsAvailableCart] = useState(false)
     const [qty, setQty] = useState(0)
     const [cartItemDetails,setCartItemsDetails] = useState()
+    
+    const isUpdatingRef = useRef(false);
+    const updateTimerRef = useRef(null);
 
     const handleADDTocart = async (e) => {
         e.preventDefault()
         e.stopPropagation()
 
         try {
-            // setLoading(true)
+            setLoading(true)
 
             const response = await Axios({
                 ...SummaryApi.addTocart,
@@ -33,7 +36,6 @@ const AddToCartButton = ({ data }) => {
             const { data: responseData } = response
 
             if (responseData.success) {
-                // console.log("ADD:- ",responseData.message);
                 toast.success(responseData.message)
                 if (fetchCartItem) {
                     fetchCartItem()
@@ -49,40 +51,70 @@ const AddToCartButton = ({ data }) => {
 
     //checking this item in cart or not
     useEffect(() => {
-        const checkingitem = cartItem.some(item => item.productId._id === data._id)
-        setIsAvailableCart(checkingitem)
-
         const product = cartItem.find(item => item.productId._id === data._id)
-        setQty(product?.quantity)
+        setIsAvailableCart(!!product)
         setCartItemsDetails(product)
+        
+        // Only update local qty from Redux if we aren't currently debouncing an optimistic update
+        if (product && !isUpdatingRef.current) {
+            setQty(product.quantity)
+        } else if (!product) {
+            setQty(0)
+        }
     }, [data, cartItem])
 
-    const increaseQty = async(e) => {
-        e.preventDefault() 
-        e.stopPropagation()
-        // const currentQty = qty + 1;
-    
-       const response = await  updateCartItem(cartItemDetails?._id,qty+1)
-        
-       if(response.success){
-        toast.success("Item added")
-       }
-    }
-
-    const decreaseQty = async(e) => {
+    const increaseQty = (e) => {
         e.preventDefault()
         e.stopPropagation()
-        if(qty === 1){
-            deleteCartItem(cartItemDetails?._id)
-        }else{
-            const response = await updateCartItem(cartItemDetails?._id,qty-1);
 
-            if(response.success){
-                toast.success("Item remove")
-            }
-        }
+        setQty(prev => {
+            const newQty = prev + 1;
+            
+            isUpdatingRef.current = true;
+            if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+            
+            updateTimerRef.current = setTimeout(async () => {
+                try {
+                    await updateCartItem(cartItemDetails?._id, newQty)
+                } catch (error) {
+                    console.error(error)
+                } finally {
+                    isUpdatingRef.current = false;
+                }
+            }, 500);
+
+            return newQty;
+        });
     }
 
+    const decreaseQty = (e) => {
+        e.preventDefault()
+        e.stopPropagation()
+
+        if (qty === 1) {
+            deleteCartItem(cartItemDetails?._id)
+            return
+        }
+
+        setQty(prev => {
+            const newQty = prev - 1;
+            
+            isUpdatingRef.current = true;
+            if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+            
+            updateTimerRef.current = setTimeout(async () => {
+                try {
+                    await updateCartItem(cartItemDetails?._id, newQty)
+                } catch (error) {
+                    console.error(error)
+                } finally {
+                    isUpdatingRef.current = false;
+                }
+            }, 500);
+
+            return newQty;
+        });
+    }
 
     return (
         <div className='w-full max-w-[150px]'>
