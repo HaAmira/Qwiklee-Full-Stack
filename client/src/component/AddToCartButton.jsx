@@ -7,6 +7,8 @@ import AxiosToastError from '../utils/AxiosToastError'
 import Loading from './Loading'
 import { useSelector } from 'react-redux'
 import { FaMinus, FaPlus } from "react-icons/fa6";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 
 const AddToCartButton = ({ data }) => {
     const { fetchCartItem, updateCartItem, deleteCartItem } = useGlobalContext()
@@ -14,8 +16,9 @@ const AddToCartButton = ({ data }) => {
     const cartItem = useSelector(state => state.cartItem.cart)
     const [isAvailableCart, setIsAvailableCart] = useState(false)
     const [qty, setQty] = useState(0)
-    const [cartItemDetails,setCartItemsDetails] = useState()
-    
+    const qtyRef = useRef(0)
+    const [cartItemDetails, setCartItemsDetails] = useState()
+
     const isUpdatingRef = useRef(false);
     const updateTimerRef = useRef(null);
 
@@ -54,66 +57,61 @@ const AddToCartButton = ({ data }) => {
         const product = cartItem.find(item => item.productId._id === data._id)
         setIsAvailableCart(!!product)
         setCartItemsDetails(product)
-        
+
         // Only update local qty from Redux if we aren't currently debouncing an optimistic update
         if (product && !isUpdatingRef.current) {
             setQty(product.quantity)
+            qtyRef.current = product.quantity
         } else if (!product) {
             setQty(0)
+            qtyRef.current = 0
         }
     }, [data, cartItem])
+
+    const changeQuantity = (newQty) => {
+        setQty(newQty);
+        qtyRef.current = newQty;
+
+        isUpdatingRef.current = true;
+        if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
+
+        updateTimerRef.current = setTimeout(async () => {
+            try {
+                await updateCartItem(cartItemDetails?._id, newQty)
+            } catch (error) {
+                console.error(error)
+            } finally {
+                isUpdatingRef.current = false;
+            }
+        }, 500);
+    }
 
     const increaseQty = (e) => {
         e.preventDefault()
         e.stopPropagation()
 
-        setQty(prev => {
-            const newQty = prev + 1;
-            
-            isUpdatingRef.current = true;
-            if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
-            
-            updateTimerRef.current = setTimeout(async () => {
-                try {
-                    await updateCartItem(cartItemDetails?._id, newQty)
-                } catch (error) {
-                    console.error(error)
-                } finally {
-                    isUpdatingRef.current = false;
-                }
-            }, 500);
-
-            return newQty;
-        });
+        const newQty = qtyRef.current + 1;
+        changeQuantity(newQty);
     }
 
-    const decreaseQty = (e) => {
+    const decreaseQty = async (e) => {
         e.preventDefault()
         e.stopPropagation()
 
-        if (qty === 1) {
-            deleteCartItem(cartItemDetails?._id)
+        if (qtyRef.current === 1) {
+            isUpdatingRef.current = true;
+            try {
+                await deleteCartItem(cartItemDetails?._id)
+            } catch (error) {
+                console.error(error)
+            } finally {
+                isUpdatingRef.current = false;
+            }
             return
         }
 
-        setQty(prev => {
-            const newQty = prev - 1;
-            
-            isUpdatingRef.current = true;
-            if (updateTimerRef.current) clearTimeout(updateTimerRef.current);
-            
-            updateTimerRef.current = setTimeout(async () => {
-                try {
-                    await updateCartItem(cartItemDetails?._id, newQty)
-                } catch (error) {
-                    console.error(error)
-                } finally {
-                    isUpdatingRef.current = false;
-                }
-            }, 500);
-
-            return newQty;
-        });
+        const newQty = qtyRef.current - 1;
+        changeQuantity(newQty);
     }
 
     return (
@@ -121,7 +119,7 @@ const AddToCartButton = ({ data }) => {
             {
                 isAvailableCart ? (
                     <div className='flex w-full h-full'>
-                        <button onClick={decreaseQty}  className='bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center'><FaMinus /></button>
+                        <button onClick={decreaseQty} className='bg-green-600 hover:bg-green-700 text-white flex-1 w-full p-1 rounded flex items-center justify-center'><FaMinus /></button>
 
                         <p className='flex-1 w-full font-semibold px-1 flex items-center justify-center'>{qty}</p>
 
@@ -129,7 +127,7 @@ const AddToCartButton = ({ data }) => {
                     </div>
                 ) : (
                     <button onClick={handleADDTocart} className='bg-green-600 hover:bg-green-700 text-white px-2 lg:px-4 py-1 rounded'>
-                        {loading ? <Loading /> : "Add"}
+                        {loading ? <AiOutlineLoading3Quarters className='animate-spin' /> : "Add"}
                     </button>
                 )
             }
