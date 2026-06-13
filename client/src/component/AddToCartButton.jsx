@@ -21,7 +21,6 @@ const AddToCartButton = ({ data }) => {
 
     const isUpdatingRef = useRef(false);
     const updateTimerRef = useRef(null);
-    console.log("data:- ", data);
 
     const handleADDTocart = async (e) => {
         e.preventDefault()

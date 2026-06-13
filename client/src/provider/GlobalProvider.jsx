@@ -52,8 +52,6 @@ const GlobalProvider = ({ children }) => {
       if (responseData.success) {
 
         fetchCartItem()
-        console.log("responseData updatecardtItem:- ", responseData.productStock, ", ", responseData.quantity);
-        // if(responseData.productStock)
         return responseData
       }
     } catch (error) {
